@@ -1,0 +1,50 @@
+<?php
+
+
+ if(isset($_POST["Import"])){
+		
+		$filename=$_FILES["file"]["tmp_name"];		
+
+
+		 if($_FILES["file"]["size"] > 0)
+		 {
+		  	$file = fopen($filename, "r");
+	        while (($getData = fgetcsv($file, 10000, ",")) !== FALSE)
+	         {
+            
+                $servername = "ls-d569aff0f012a672548dfa141c2ff6da29f4a426.cx4g6oyqyv3o.ap-southeast-2.rds.amazonaws.com";
+                $username = "dbmasteruser";
+                $password = ",urI{;P+E-97C<Is>,AZkgnDZ5V313mw";
+                $dbname = "dbmaster";
+            
+                // Create connection
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                // Check connection
+                if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+                }
+
+	           $sql = "INSERT into student_data (student_ID,first_name,last_name) 
+                   values ('".$getData[0]."','".$getData[1]."','".$getData[2]."')";
+                   $result = mysqli_query($conn, $sql);
+				if(!isset($result))
+				{
+					echo "<script type=\"text/javascript\">
+							alert(\"Invalid File:Please Upload CSV File.\");
+							window.location = \"../index.php\"
+						  </script>";		
+				}
+				else {
+					  echo "<script type=\"text/javascript\">
+						alert(\"CSV File has been successfully Imported.\");
+						window.location = \"../index.php\"
+					</script>";
+				}
+	         }
+			
+	         fclose($file);	
+		 }
+	}	 
+
+
+ ?>
